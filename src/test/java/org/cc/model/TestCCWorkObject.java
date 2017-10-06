@@ -14,7 +14,7 @@ import org.junit.Test;
  */
 public class TestCCWorkObject {
 
-    @Test
+
     public void test_metadata() throws  Exception {
         CCProcObject proc = new CCProcObject(CCTest.base);
         try {

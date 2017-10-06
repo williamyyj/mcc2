@@ -9,7 +9,7 @@ import org.junit.Test;
  */
 public class CodeBaseTest {
 
-    @Test
+
     public void test_Load() {
         CCCodeBase cb = new CCCodeBase(CCTest.prj_base,"cp20171005");
         cb.pack();

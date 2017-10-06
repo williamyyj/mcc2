@@ -57,7 +57,7 @@ public class TestDB {
         }
     }
 
-    @Test
+
     public void test_page() throws Exception {
         CCProcObject proc = new CCProcObject(CCTest.base);
         try {

@@ -30,7 +30,7 @@ public class CCModuleTest {
             CCMvelTemplate tml = new CCMvelTemplate(CCTest.prj_base, templateId);
             Object ret = tml.execute(vm);
             System.out.println(ret);
-            CCDataUtils.saveString(new File(ap_base,moduleId+"_"+pageId+".jsp"), "UTF-8", (String) ret);
+           // CCDataUtils.saveString(new File(ap_base,moduleId+"_"+pageId+".jsp"), "UTF-8", (String) ret);
         } finally {
             cm.release();
         }

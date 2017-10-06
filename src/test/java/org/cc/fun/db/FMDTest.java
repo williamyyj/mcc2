@@ -12,7 +12,6 @@ import org.junit.Test;
  */
 public class FMDTest {
 
-    @Test
     public void test_jometadata() throws Exception {
         CCProcObject proc = new CCProcObject(CCTest.prj_base);
         try {                  

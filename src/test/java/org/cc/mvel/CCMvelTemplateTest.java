@@ -14,7 +14,7 @@ public class CCMvelTemplateTest {
     public void test_line() {
         Map<String, Object> m = new HashMap<>();
         m.put("dp", "dp");
-           m.put("prefix", "row");
+        m.put("prefix", "row");
         Object ret = TemplateRuntime.eval("$${@{prefix}.cName(@{prefix}.newId)}", m);
         System.out.println(ret);
 
