@@ -61,9 +61,9 @@ public class proc_metadata extends DBFBase implements Function<CCProcObject, Boo
             }
         }
         name.setLength(name.length() - 1);
-        nm.put(CCProcObject.meta_fields, name);
         nm.put("id", table);
         nm.put("name", table);
+        nm.put(CCProcObject.meta_fields, name.toString());
         nm.put("meta", ncols);
         return nm;
     }
@@ -108,11 +108,10 @@ public class proc_metadata extends DBFBase implements Function<CCProcObject, Boo
             ICCList ncols = (ICCList) nm.remove("meta");
             ICCList rcols = new CCList();
             ret = CCJSON.mix(nm, om);
+            ret.put(CCProcObject.meta_fields, nm.get(CCProcObject.meta_fields));
             for (int i = 0; i < ncols.size(); i++) {
                 ICCMap nrow = ncols.map(i);
-                CCLogger.debug(nrow);
                 ICCMap orow = CCJSON.get(ocols, "id", nrow.asString("id"));
-                CCLogger.debug(orow);
                 ICCMap row = CCJSON.mix(nrow, orow);
                 if (orow != null) {
                     row.put("label", orow.get("label"));

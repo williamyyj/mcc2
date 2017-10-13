@@ -58,15 +58,19 @@ public class HTCellBase extends CCNode {
     }
 
     public String processTemplate(String prefix, Object ctx, VariableResolverFactory factory) {
-        Map p = (Map) MVEL.eval(contents, ctx, factory);
         String base = (String) factory.getVariableResolver("$base").getValue();
         String theme = (String) factory.getVariableResolver("theme").getValue();
         String ht = (String) factory.getVariableResolver("ht").getValue();
-        String ftId = (String) MVEL.eval("tml", ctx, factory);
-        String htId = theme + "." + ht + "." + prefix + "_" + ftId;
-        CCMvelTemplate tml = new CCMvelTemplate(base, htId);
-        String tmpl = String.valueOf(TemplateRuntime.execute(tml.getTemplate(), ctx, factory));
-        return proc_pretty(p.get("$tab"), tmpl);
+        String tml = (String) MVEL.eval("tml", ctx, factory);
+        String tmplateId = theme + "." + ht + "." + prefix + "_" + tml;
+        CCMvelTemplate tmpl = new CCMvelTemplate(base, tmplateId);
+        return String.valueOf(TemplateRuntime.execute(tmpl.getTemplate(), ctx, factory));
+    }
+
+    public String cell(String prefix, Object ctx, VariableResolverFactory factory) {
+        Map p = (Map) MVEL.eval(contents, ctx, factory);
+        String content = processTemplate(prefix,ctx,factory);
+        return proc_pretty(p.get("$tab"), content);
     }
 
     public void eachTemplate(String prefix, TemplateOutputStream appender, Object ctx, VariableResolverFactory factory) {
@@ -77,7 +81,7 @@ public class HTCellBase extends CCNode {
             fld.put("description", fld.asString("description"));
             fld.put("id", fld.asString("alias", fld.asString("id")));
             factory.createVariable("$meta", fld);
-            appender.append(processTemplate(prefix, ctx, factory));
+            appender.append(cell(prefix, ctx, factory));
             appender.append("\r\n");
         });
     }

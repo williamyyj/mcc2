@@ -28,7 +28,7 @@ public class HTQueryObject extends HTCellBase {
             fld.put("id", fld.asString("alias", fld.asString("id")));
             fld.put("tml", fld.getOrDefault("tml", ""));
             fld.put("attr", fld.getOrDefault("attr", ""));
-            appender.append(processTemplate("fld", fld, factory));
+            appender.append(cell("fld", fld, factory));
             appender.append("\r\n");
         });
         return next != null ? next.eval(runtime, appender, ctx, factory) : null;

@@ -21,7 +21,7 @@ public class HTCellObject extends HTCellBase {
     @Override
     public Object eval(TemplateRuntime runtime, TemplateOutputStream appender, Object ctx, VariableResolverFactory factory) {
          Map p = (Map) MVEL.eval(contents, ctx, factory);
-        appender.append(processTemplate("cell",p,factory));
+        appender.append(cell("cell",p,factory));
         return next != null ? next.eval(runtime, appender, ctx, factory) : null;
     }
 

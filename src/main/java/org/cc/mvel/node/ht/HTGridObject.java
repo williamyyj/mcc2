@@ -43,8 +43,12 @@ public class HTGridObject extends HTCellBase {
             fld.put("id", fld.asString("alias", fld.asString("id")));
             fld.put("tml", fld.getOrDefault("html", html));
             fld.put("attr", fld.getOrDefault("hattr", hattr));
-            //factory.createVariable("$meta", fld);
-            appender.append(processTemplate("grid", fld, factory));
+            if (fld.containsKey("fx")) {
+                String content = processTemplate("grid", fld, factory);
+                fld.put("$content", content);
+                fld.put("tml", fld.get("fx"));
+            }
+            appender.append(cell("grid", fld, factory));
             appender.append("\r\n");
         });
     }
@@ -57,14 +61,19 @@ public class HTGridObject extends HTCellBase {
             ICCMap fld = (ICCMap) o;
             fld.put("placeholder", fld.asString("placeholder"));
             fld.put("description", fld.asString("description"));
-            fld.put("id", fld.asString("alias", fld.asString("id")));          
+            fld.put("id", fld.asString("alias", fld.asString("id")));
             fld.put("attr", fld.getOrDefault("battr", battr));
-            if(fld.containsKey("beval")){    
-                fld.put("eval",TemplateRuntime.eval(fld.asString("beval"), fld, factory));
+            if (fld.containsKey("beval")) {
+                fld.put("eval", TemplateRuntime.eval(fld.asString("beval"), fld, factory));
                 fld.put("btml", "eval");
             }
-             fld.put("tml", fld.getOrDefault("btml", btml));
-            appender.append(processTemplate("grid", fld, factory));
+            fld.put("tml", fld.getOrDefault("btml", btml));
+            if (fld.containsKey("fx")) {
+                String content = processTemplate("grid", fld, factory);
+                fld.put("$content", content);
+                fld.put("tml", fld.get("fx"));
+            }
+            appender.append(cell("grid", fld, factory));
             appender.append("\r\n");
         });
     }
