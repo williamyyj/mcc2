@@ -1,9 +1,9 @@
 package org.cc.model;
 
-
 import com.google.common.reflect.ClassPath;
 import java.util.HashMap;
 import java.util.Map;
+import org.cc.CCMap;
 import org.cc.IAProxyClass;
 import org.cc.ICCMap;
 import org.cc.util.CCLogger;
@@ -57,6 +57,40 @@ public class CCFieldUtils {
             fld.__init__(cm);
         }
         return fld;
+    }
+
+    public static ICCMap mix(ICCMap mFields, String line) {
+        ICCMap ret = new CCMap();
+        String[] items = line.split(":");
+        ICCMap p = mFields.map(items[0]);
+        if (p != null) {
+            ret.putAll(p);
+        }
+        if (items.length > 1) {
+            ret.put("alias", items[1]);
+        }
+        return ret;
+    }
+    
+    public static ICCMap mix(ICCMap mFields, Object o) {
+        if(o instanceof ICCMap){
+            return mix(mFields,(ICCMap)o);
+        } else if( o instanceof String){
+            return mix(mFields,(String)o);
+        }
+        return null;
+    }
+    
+    public static ICCMap mix(ICCMap mFields, ICCMap m) {
+        ICCMap ret = new CCMap();     
+        ICCMap p = mFields.map(m.asString("id"));
+        if (p != null) {
+            ret.putAll(p);
+        }
+        m.forEach((k,v)->{
+            ret.put(k, v);
+        });
+        return ret;
     }
 
 }

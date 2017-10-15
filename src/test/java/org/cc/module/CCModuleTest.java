@@ -4,6 +4,7 @@ package org.cc.module;
 import java.io.File;
 import java.io.IOException;
 import org.cc.CCTest;
+import org.cc.ICCList;
 import org.cc.ICCMap;
 import org.cc.data.CCDataUtils;
 import org.cc.mvel.CCMvelTemplate;
@@ -32,7 +33,11 @@ public class CCModuleTest {
            // Object ret = tml.execute(vm);
           //  System.out.println(ret);
             System.out.println("--------------------------------------------------------");
-            System.out.println(cm.proc().metadata("psSaleSP").fields().get("purchasedt"));
+            ICCMap pm = cm.getDataPool(pageId);
+            ICCList fields = pm.list("$fields");
+            fields.stream().forEach(o->{
+                System.out.println(o);
+            });
            // CCDataUtils.saveString(new File(ap_base,moduleId+"_"+pageId+".jsp"), "UTF-8", (String) ret);
         } finally {
             cm.release();

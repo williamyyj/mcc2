@@ -1,17 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cc;
+
+import java.io.File;
 
 /**
  *
  * @author william
  */
 public class CCTest {
+    public static String root = "";
+    public static String base = "";
+    public static String prj_base = "";
 
-    public static String base = "D:\\Users\\william\\Dropbox\\resources\\prj\\baphiq";
-    public static String prj_base = "D:\\Users\\william\\Dropbox\\resources\\project\\baphiq";
+    static {
+
+        if ("Mac OS X".equals(System.getProperty("os.name"))) {
+            root = "/Users/william/Dropbox/resources";
+            base = root + "/prj/baphiq";
+            prj_base = root+"/project/baphiq";
+        } else {
+            File f = new File(root);
+            if (!f.exists()) {
+                root = "D:\\Users\\william\\Dropbox\\resources\\";
+                base = root + "\\prj\\baphiq";
+            }
+        }
+    }
 
 }
