@@ -170,8 +170,8 @@ public class CCJsonParser extends CCBuffer {
     }
 
     public Exception error(String error) {
-        String fmt = "Error %s in line:%s pos:%s";
-        String message = String.format(fmt, error, line, pos);
+        String fmt = "Error (%s)%s in line:%s pos:%s ";
+        String message = String.format(fmt,src, error, line, pos);
         CCLogger.debug(message);
         return new Exception(message);
     }

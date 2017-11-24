@@ -348,6 +348,15 @@ public class CCJSON {
         c.forEach((k, v) -> ret.put(k, v));
         return ret;
     }
+    
+    
+    public static ICCMap data(ICCMap p, String cid) {
+        
+        if(p.containsKey(cid)){
+            return data(p,p.map(cid));
+        }
+        return p;
+    }
 
     public static ICCMap get(ICCList ja, String name, String value) {
         if (ja != null) {
@@ -370,4 +379,5 @@ public class CCJSON {
             }
         }
     }
+
 }

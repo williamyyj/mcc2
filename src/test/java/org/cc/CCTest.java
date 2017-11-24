@@ -3,10 +3,10 @@ package org.cc;
 import java.io.File;
 
 /**
- *
  * @author william
  */
 public class CCTest {
+
     public static String root = "";
     public static String base = "";
     public static String prj_base = "";
@@ -15,15 +15,12 @@ public class CCTest {
 
         if ("Mac OS X".equals(System.getProperty("os.name"))) {
             root = "/Users/william/Dropbox/resources";
-            base = root + "/prj/baphiq";
-            prj_base = root+"/project/baphiq";
         } else {
-            File f = new File(root);
-            if (!f.exists()) {
-                root = "D:\\Users\\william\\Dropbox\\resources\\";
-                base = root + "\\prj\\baphiq";
-            }
+            root = "D:\\Users\\william\\Dropbox\\resources\\";
         }
+        base = root + "/prj/baphiq";
+        prj_base = root + "/project/baphiq";
+
     }
 
 }

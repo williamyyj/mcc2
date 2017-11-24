@@ -9,7 +9,7 @@ import org.cc.util.CCJSON;
  *
  * @author william
  */
-public class CCList extends ArrayList<Object> implements ICCList {
+public class CCList extends ArrayList<Object> implements ICCList{
 
     @Override
     public int asInt(int idx, int dv) {

@@ -1,7 +1,5 @@
 package org.cc.module;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.cc.CCList;
 import org.cc.CCMap;
 import org.cc.CCProcObject;
@@ -10,7 +8,6 @@ import org.cc.ICCMap;
 import org.cc.ICCResource;
 import org.cc.model.CCFieldUtils;
 import org.cc.model.CCMetadata;
-import org.cc.model.ICCField;
 import org.cc.util.CCJSON;
 import org.cc.util.CCPath;
 
@@ -27,13 +24,11 @@ public class CCModule implements ICCResource {
 
     private ICCMap cfg;
 
-    private ICCMap mFields;
-
-    private ICCMap pFields;
+    private CCMFields mFields;
 
     private String pre_module = "/module";
 
-    private String pre_metadata = "/module/meta";
+    private String pre_metadata = "/metadata";
 
     public CCModule(String base, String moduleId) {
         this.base = base;
@@ -42,7 +37,7 @@ public class CCModule implements ICCResource {
     }
 
     private void __init_module() {
-        mFields = new CCMap();
+        mFields = new CCMFields();
         cfg = CCJSON.load(base + pre_module, moduleId);
         proc = new CCProcObject(base);
         __init_metadata();
@@ -51,10 +46,8 @@ public class CCModule implements ICCResource {
 
     private void __init_fields() {
         ICCList list = (ICCList) cfg.remove("$fields");
-        pFields = new CCMap();
         list.stream().forEach(o -> {
-            ICCMap fld = (ICCMap) o ;
-            pFields.put(fld.asString("id"),CCFieldUtils.mix(mFields,fld));
+            mFields.add((ICCMap) o);
         });
     }
 
@@ -62,12 +55,12 @@ public class CCModule implements ICCResource {
         ICCList mIds = cfg.list("$metadata");
         mIds.stream().map((o) -> (String) o).forEach((item) -> {
             CCMetadata md = proc.metadata(pre_metadata, item);
-            md.fields().forEach((id,fld)->{
-                mFields.put(id, fld.cfg());
+            md.fields().forEach((id, fld) -> {
+                mFields.add(fld.cfg());
             });
         });
     }
-
+    
     public void inject(ICCMap m) {
         cfg.putAll(m);
     }
@@ -87,19 +80,27 @@ public class CCModule implements ICCResource {
         }
     }
 
-    public ICCMap mFields() {
-        return this.mFields;
-    }
-
     public ICCMap getDataPool(String pageId) {
         ICCMap vm = CCJSON.data(cfg(), CCPath.map(cfg(), "$cell:" + pageId));
         vm.put("$cm", cfg());
+        vm.put("$mFields",mFields);
         ICCList list = (ICCList) vm.remove("$fields");
-        ICCList nFields = new CCList();
-        list.stream().forEach(o -> {
-            nFields.add(CCFieldUtils.mix(pFields, o));
-        });
-        vm.put("$fields", nFields);
+        if (list != null) {
+            CCMFields flds = new CCMFields();
+            CCList ulist = new CCList();
+            String cid =  vm.asString("cid",null);
+            list.stream().forEach(o -> {
+                ICCMap m = CCFieldUtils.mix(mFields.map(), o);
+                flds.add(m);
+                if(cid!=null){
+                    ICCMap fld = CCJSON.data(m, cid);
+                    fld.put("tml",fld.asString("tml",vm.asString("tml")));
+                    ulist.add(fld);
+                }
+            });
+            vm.put("$flds", flds);
+            vm.put("$fields", ulist);       
+        }
         return vm;
     }
 

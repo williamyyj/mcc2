@@ -29,7 +29,7 @@ public class proc_metadata extends DBFBase implements Function<CCProcObject, Boo
         } else {
             try {
                 ICCMap nm = exec(proc, table);
-                proc_mix(new File(proc.base() + "/module/meta", table + ".json"), nm);
+                proc_mix(new File(proc.base() + "/metadata", table + ".json"), nm);
             } catch (Exception e) {
                 CCLogger.info("Fail proc_metadata : " + table, e);
             }

@@ -6,6 +6,7 @@ import org.cc.ICCMap;
 import org.cc.mvel.CCMvelTemplate;
 import org.cc.mvel.node.CCNode;
 import org.mvel2.MVEL;
+import org.mvel2.integration.VariableResolver;
 import org.mvel2.integration.VariableResolverFactory;
 import org.mvel2.templates.TemplateRuntime;
 import org.mvel2.templates.res.Node;
@@ -61,7 +62,7 @@ public class HTCellBase extends CCNode {
         String base = (String) factory.getVariableResolver("$base").getValue();
         String theme = (String) factory.getVariableResolver("theme").getValue();
         String ht = (String) factory.getVariableResolver("ht").getValue();
-        String tml = (String) MVEL.eval("tml", ctx, factory);
+        String tml = strCtxFactory("tml", ctx, factory);
         String tmplateId = theme + "." + ht + "." + prefix + "_" + tml;
         CCMvelTemplate tmpl = new CCMvelTemplate(base, tmplateId);
         return String.valueOf(TemplateRuntime.execute(tmpl.getTemplate(), ctx, factory));
@@ -69,7 +70,7 @@ public class HTCellBase extends CCNode {
 
     public String cell(String prefix, Object ctx, VariableResolverFactory factory) {
         Map p = (Map) MVEL.eval(contents, ctx, factory);
-        String content = processTemplate(prefix,ctx,factory);
+        String content = processTemplate(prefix, ctx, factory);
         return proc_pretty(p.get("$tab"), content);
     }
 
@@ -84,6 +85,33 @@ public class HTCellBase extends CCNode {
             appender.append(cell(prefix, ctx, factory));
             appender.append("\r\n");
         });
+    }
+
+    /**
+     *
+     * @param id
+     * @param ctx
+     * @param factory
+     * @return
+     */
+    public String strCtxFactory(String id, Object ctx, VariableResolverFactory factory) {
+        //System.out.println("===== strCtxFactory : " + id+","+ctx);
+        Object o = ((Map) ctx).get(id);
+        return (o != null) ? (String) o : (String) factory.getVariableResolver(id).getValue();
+    }
+
+    public Object evalCxtFactory(String id, Object ctx, VariableResolverFactory factory) {
+        String template = strCtxFactory(id, ctx, factory);
+        return TemplateRuntime.eval(template, ctx, factory);
+    }
+
+    public String strFactory(String id, VariableResolverFactory factory, String dv) {
+        try {
+            VariableResolver var = factory.getVariableResolver(id);
+            return (String) var.getValue();
+        } catch (Exception e) {
+            return dv;
+        }
     }
 
 }

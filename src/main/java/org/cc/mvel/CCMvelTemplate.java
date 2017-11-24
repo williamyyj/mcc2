@@ -34,7 +34,6 @@ public class CCMvelTemplate implements ICCTemplate {
                 _customNode = new HashMap<>();
                 List<Class> clss = CCPackage.getClasses("org.cc.mvel.node");
                 clss.stream().forEach(cls -> {
-
                     IAProxyClass a = (IAProxyClass) cls.getAnnotation(IAProxyClass.class);
                     if (a != null) {
                         _customNode.put(a.id(), cls);

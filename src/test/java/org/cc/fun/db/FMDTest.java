@@ -16,7 +16,7 @@ public class FMDTest {
     public void test_jometadata() throws Exception {
         CCProcObject proc = new CCProcObject(CCTest.prj_base);
         try {                  
-            String metaId = "psSaleSP";
+            String metaId = "JOContent";
             proc.params().put("table", metaId);
             System.out.println("-----------------------------------------------------");
             System.out.println(proc.params());

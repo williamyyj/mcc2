@@ -1,8 +1,9 @@
 package org.cc.mvel.node.ht;
 
 import org.cc.IAProxyClass;
-import org.cc.ICCList;
 import org.cc.ICCMap;
+import org.cc.module.CCMFields;
+import org.cc.util.CCJSON;
 import org.mvel2.integration.VariableResolverFactory;
 import org.mvel2.templates.TemplateRuntime;
 import org.mvel2.templates.util.TemplateOutputStream;
@@ -20,18 +21,20 @@ public class HTQueryObject extends HTCellBase {
 
     @Override
     public Object eval(TemplateRuntime runtime, TemplateOutputStream appender, Object ctx, VariableResolverFactory factory) {
-        ICCList qf = (ICCList) factory.getVariableResolver("$fields").getValue();
-        qf.stream().forEach((o) -> {
-            ICCMap fld = (ICCMap) o;
-            fld.put("placeholder", fld.asString("placeholder"));
+        CCMFields fields = (CCMFields) factory.getVariableResolver("$flds").getValue();
+        String cid =  strFactory("cid",factory,"$qf");
+        fields.list().stream().forEach((o) -> {
+            ICCMap fld = CCJSON.data((ICCMap)o, cid);
+            fld.put("placeholder", fld.asString("placeholder","請輸入"+fld.asString("label")));
             fld.put("description", fld.asString("description"));
-            fld.put("id", fld.asString("alias", fld.asString("id")));
-            fld.put("tml", fld.getOrDefault("tml", ""));
-            fld.put("attr", fld.getOrDefault("attr", ""));
+            fld.put("must", fld.asBool("must"));
+            System.out.println(fld);
             appender.append(cell("fld", fld, factory));
             appender.append("\r\n");
         });
         return next != null ? next.eval(runtime, appender, ctx, factory) : null;
     }
+
+
 
 }
